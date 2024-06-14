@@ -9,9 +9,11 @@
     <div th:fragment="header">
         <div class="header">
             <div class="logo">게시판</div>
-            <div sec:authorize="isAuthenticated()">
-                <img th:src="${#authentication.getPrincipal().getProfilePic()}" alt="Profile Image" style="width: 30px; height: 30px; border-radius: 15px;"/>
-                <span th:text="${#authentication.getPrincipal().getName()}" style="color: white"></span>
+            <div class="user">
+                <div class="user-info" sec:authorize="isAuthenticated()">
+                    <span th:text="${#authentication.getPrincipal().getName()}" class="user-name"></span>
+                    <img th:src="${#authentication.getPrincipal().getProfilePic()}" alt="Profile Image" class="profile-pic"/>
+                </div>
             </div>
         </div>
         <div class="nav-bar">
