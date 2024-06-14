@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>게시판</title>
@@ -9,12 +9,21 @@
     <div th:fragment="header">
         <div class="header">
             <div class="logo">게시판</div>
+            <div sec:authorize="isAuthenticated()">
+                <img th:src="${#authentication.getPrincipal().getProfilePic()}" alt="Profile Image" style="width: 30px; height: 30px; border-radius: 15px;"/>
+                <span th:text="${#authentication.getPrincipal().getName()}" style="color: white"></span>
+            </div>
         </div>
         <div class="nav-bar">
             <a th:href="@{/}">홈</a>
             <a th:href="@{/board/list}">게시판 목록</a>
-            <a href="#">서비스</a>
-            <a href="#">연락처</a>
+            <a href="#">기능1</a>
+            <div sec:authorize="!isAuthenticated()">
+                <a href="/oauth2/authorization/kakao">로그인</a>
+            </div>
+            <div sec:authorize="isAuthenticated()">
+                <a href="/logout">로그아웃</a>
+            </div>
         </div>
     </div>
 </body>
