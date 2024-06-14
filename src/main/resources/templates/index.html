@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+</head>
+<body>
+    <!-- 헤더 포함 -->
+    <div th:replace="~{/layout/header :: header}"></div>
+
+    <div style="text-align: center;">
+        <img th:src="@{/img/main.jpg}" alt="류호근" style="max-width: 100%; height: auto; padding-top: 9px;">
+    </div>
+
+    <!-- 푸터 포함 -->
+    <div th:replace="~{/layout/footer :: footer}"></div>
+</body>
+</html>

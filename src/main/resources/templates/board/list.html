@@ -1,13 +1,75 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Board List</title>
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/list.css}">
 </head>
 <body>
-    로그인 성공
-    <a href="/logout">로그아웃</a>
-    <a href="/login">로그인</a>
+<!-- 헤더 포함 -->
+<div th:replace="~{/layout/header :: header}"></div>
 
+<div class="content">
+    <div class="board-title">게시판 목록</div>
+    <table class="board-table">
+        <thead>
+        <tr>
+            <th class="number">번호</th>
+            <th class="title">제목</th>
+            <th class="writer">작성자</th>
+            <th class="views">조회수</th>
+            <th class="date">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+<!--        <tr>-->
+<!--            <td>1</td>-->
+<!--            <td><a href="#">게시글 제목1</a></td>-->
+<!--            <td>작성자1</td>-->
+<!--            <td>2024-06-14</td>-->
+<!--            <td>10</td>-->
+<!--        </tr>-->
+            <tr th:each="board : ${boards}">
+                <td th:text="${board.boardId}"></td>
+                <td>
+                    <a th:href="@{/board/detail/{boardId}(boardId=${board.boardId})}"
+                       th:text="${board.boardTitle} + (${board.fileCount} > 0 ? ' [첨부파일:' + ${board.fileCount} + ']' : '')"></a>
+                </td>
+                <td th:text="${board.name}"></td>
+                <td th:text="${board.boardViews}"></td>
+                <td>
+                    <span th:if="${board.boardRegisterDate == board.boardUpdateDate}"
+                          th:text="${#temporals.format(board.boardRegisterDate, 'yy년 M월 d일 HH시 mm분')}"></span>
+                    <span th:if="${board.boardRegisterDate != board.boardUpdateDate}"
+                          th:text="${#temporals.format(board.boardUpdateDate, 'yy년 M월 d일 HH시 mm분') + ' (수정)'}"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <ul class="pagination">
+        <!-- Previous group button -->
+        <li th:classappend="${startPage == 1} ? 'disabled' : ''" class="page-item">
+            <a class="page-link" th:href="@{/board/list(page=${startPage - 1}, pageSize=${pageSize})}" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+
+        <!-- Page numbers -->
+        <li th:each="i : ${#numbers.sequence(startPage, endPage)}" th:classappend="${currentPage == i} ? 'active' : ''" class="page-item">
+            <a class="page-link" th:href="@{/board/list(page=${i}, pageSize=${pageSize})}" th:text="${i}"></a>
+        </li>
+
+        <!-- Next group button -->
+        <li th:classappend="${endPage == totalPages} ? 'disabled' : ''" class="page-item">
+            <a class="page-link" th:href="@{/board/list(page=${endPage + 1}, pageSize=${pageSize})}" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+<!-- 푸터 포함 -->
+<div class="footer" th:replace="~{/layout/footer :: footer}"></div>
 </body>
 </html>
