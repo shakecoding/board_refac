@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>호근커뮤니티 - 게시글 상세보기</title>
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/detail.css}">
+</head>
+<body>
+<!-- 헤더 포함 -->
+<div th:replace="~{/layout/header :: header}"></div>
+
+<!-- Main -->
+<div id="main" class="container">
+    <header class="head">
+        <h1 class="fw-bold">호근커뮤니티</h1>
+        <p>게시글 상세보기</p>
+    </header>
+
+    <!-- Table -->
+    <div class="content">
+        <div class="mb-3">
+            <div class="form-label">번호</div>
+            <label>
+                <input type="text" name="boardId" class="form-control" th:value="${board.boardId}" readonly/>
+            </label>
+        </div>
+        <div class="mb-3">
+            <div class="form-label">제목</div>
+            <label>
+                <input type="text" class="form-control" th:value="${board.boardTitle}" readonly/>
+            </label>
+        </div>
+        <div class="mb-3">
+            <div class="form-label">내용</div>
+            <label>
+                <textarea class="form-control" rows="6" readonly th:text="${board.boardContent}"></textarea>
+            </label>
+        </div>
+        <div class="mb-3">
+            <div class="form-label">작성자</div>
+            <label>
+                <input type="text" class="form-control" th:value="${board.name}" readonly/>
+            </label>
+        </div>
+        <div class="mb-3">
+            <div class="form-label">작성일</div>
+            <label>
+                <input type="text" class="form-control"
+                       th:value="${#temporals.format(board.boardRegisterDate, 'yy년 M월 d일 HH시 mm분')}"
+                       readonly/>
+            </label>
+        </div>
+        <div class="mb-3">
+            <div class="form-label">조회수</div>
+            <label>
+                <input type="text" class="form-control" th:value="${board.boardViews}" readonly/>
+            </label>
+        </div>
+        <div th:if="${not #lists.isEmpty(files)}">
+            <div class="mb-3">
+                <h4>첨부파일</h4>
+                <div class="uploadResult">
+                    <ul>
+                        <li th:each="file : ${files}">
+                            <a th:href="@{/download/{fileId}(fileId=${file.fileId})}"
+                               th:text="${file.originalFileName}"></a>
+                            <span th:text="${file.fileSize / 1024 + ' KB'}"></span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div sec:authorize="isAuthenticated()" style="text-align: right;">
+            <input type="hidden" name="loginId" th:value="${#authentication.getPrincipal().getProviderId()}">
+            <div th:if="${#authentication.getPrincipal().getProviderId() == board.providerId}">
+                <button type="button" class="btn btn-primary" onclick="goUpdate()">수정</button>
+                <button type="submit" class="btn btn-danger" onclick="goDelete()">삭제</button>
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Comments Section -->
+<div class="comments-section mt-5">
+    <h3>댓글</h3>
+
+    <div sec:authorize="isAuthenticated()">
+        <!-- Comment Form -->
+        <div class="comment-form mt-4">
+            <form id="commentForm" th:method="post">
+                <div class="mb-3">
+                    <label for="commentContent" class="form-label">댓글 남기기</label>
+                    <textarea class="form-control" id="commentContent" rows="3"
+                              placeholder="여기에 댓글을 입력하세요..."></textarea>
+                </div>
+                <button type="button" class="btn btn-primary" onclick="addComment()">댓글 작성</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comment List -->
+    <div class="comment-list mt-4">
+        <!-- 댓글 목록이 여기에 동적으로 추가됩니다. -->
+    </div>
+</div>
+
+<!-- 푸터 포함 -->
+<div th:replace="~{/layout/footer :: footer}"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script th:src="@{/js/detail.js}"></script>
+</body>
+</html>

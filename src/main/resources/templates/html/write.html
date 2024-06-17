@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>호근커뮤니티 - 게시글 작성</title>
+    <link rel="stylesheet" href="/static/css/layout.css">
+    <link rel="stylesheet" href="/static/css/write.css">
+</head>
+<body>
+
+<div id="main" class="container">
+    <header class="head">
+        <h1 class="fw-bold">호근커뮤니티</h1>
+        <p>게시글 작성</p>
+    </header>
+    <div class="mb-3">
+        <a href=#" class="btn-secondary">목록 보기</a>
+    </div>
+    <form method="post" id="myForm" action="#" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="boardTitle" class="form-label">제목</label>
+            <input type="text" class="form-control" id="boardTitle"
+                   placeholder="Title">
+        </div>
+        <div class="mb-3">
+            <label for="boardContent" class="form-label">내용</label>
+            <textarea class="form-control" id="boardContent" rows="6"
+                      placeholder="Content" style="resize: none;"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="upload" class="form-label">첨부파일</label>
+            <input type="file" class="form-control" id="upload" name="files" multiple>
+        </div>
+        <div class="d-grid">
+            <button type="submit" class="btn">등록</button>
+        </div>
+        <input type="hidden" name="providerId">
+    </form>
+</div>
+
+
+<script>
+    // 로그인 한 친구 ID 확인하는 함수
+    // document.getElementById('myForm').addEventListener('submit', function(event) {
+    //     // 폼 제출을 일시 중지
+    //     event.preventDefault();
+    //
+    //     // providerId 값 확인
+    //     var providerIdValue = document.getElementsByName('providerId')[0].value;
+    //     alert('Provider ID: ' + providerIdValue);
+    //
+    //     // 실제 폼 제출을 계속하려면, 아래 줄의 주석 처리를 해제
+    //     this.submit();
+    // });
+</script>
+
+</body>
+</html>

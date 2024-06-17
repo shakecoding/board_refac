@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Board List</title>
@@ -12,6 +12,9 @@
 
 <div class="content">
     <div class="board-title">게시판 목록</div>
+    <div class="write-button-container">
+        <a th:href="@{/board/write}" class="btn-write" sec:authorize="isAuthenticated()">글 작성</a>
+    </div>
     <table class="board-table">
         <thead>
         <tr>
@@ -23,13 +26,6 @@
         </tr>
         </thead>
         <tbody>
-<!--        <tr>-->
-<!--            <td>1</td>-->
-<!--            <td><a href="#">게시글 제목1</a></td>-->
-<!--            <td>작성자1</td>-->
-<!--            <td>2024-06-14</td>-->
-<!--            <td>10</td>-->
-<!--        </tr>-->
             <tr th:each="board : ${boards}">
                 <td th:text="${board.boardId}"></td>
                 <td>
@@ -70,6 +66,8 @@
 </div>
 
 <!-- 푸터 포함 -->
-<div class="footer" th:replace="~{/layout/footer :: footer}"></div>
+<div  class="footer" style="position: fixed; bottom: 0">
+    <div class="footer" th:replace="~{/layout/footer :: footer}"></div>
+</div>
 </body>
 </html>

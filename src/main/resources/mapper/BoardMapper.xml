@@ -36,18 +36,20 @@
         from TBL_BOARD
     </select>
 
+<!-- 다음 시퀀스를 가져오는 쿼리문 -->
     <select id="getSeq" resultType="_long">
         SELECT seq_board.NEXTVAL FROM dual
     </select>
 
+<!-- 게시글 작성 쿼리문 -->
     <insert id="insertBoard">
         INSERT INTO TBL_BOARD
         (BOARD_ID, BOARD_TITLE, BOARD_CONTENT, BOARD_VIEWS, BOARD_REGISTER_DATE, BOARD_UPDATE_DATE, PROVIDER_ID)
         VALUES
-        (#{boardId}, #{boardTitle}, #{boardContent}, 0, SYSDATE, SYSDATE, #{providerId})
+            (#{boardId}, #{boardTitle}, #{boardContent}, 0, SYSDATE, SYSDATE, #{providerId})
     </insert>
 
-    <select id="selectBoardDetail" resultType="BoardListDTO">
+    <select id="selectBoardDetail" resultType="BoardDetailDTO">
         SELECT
             B.BOARD_ID,
             B.BOARD_TITLE,
@@ -55,71 +57,29 @@
             U.NAME,
             B.BOARD_VIEWS,
             B.BOARD_REGISTER_DATE,
-            U.PROVIDER_ID
+            U.PROVIDER_ID,
+            (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
         FROM
             TBL_BOARD B JOIN TBL_USERS U ON U.PROVIDER_ID = B.PROVIDER_ID
         WHERE
             B.BOARD_ID = #{boardId}
     </select>
 
+<!--  작성자 pk 가지고 나가기  -->
+    <select id="getProviderIdByBoardId" resultType="String">
+        SELECT PROVIDER_ID FROM TBL_BOARD WHERE BOARD_ID = #{boardId}
+    </select>
 
-
-
-
-    <update id="updateBoard">
-        UPDATE TBL_BOARD
-        SET BOARD_TITLE = #{boardTitle},
-        BOARD_CONTENT = #{boardContent},
-        BOARD_UPDATE_DATE = SYSDATE
-        WHERE BOARD_ID = #{boardId}
-    </update>
-
+<!-- 조회수 +1 -->
     <update id="plusViews">
         UPDATE TBL_BOARD
-        SET
-        BOARD_VIEWS = BOARD_VIEWS + 1
+        SET BOARD_VIEWS = BOARD_VIEWS + 1
         WHERE BOARD_ID = #{boardId}
     </update>
 
-    <delete id="deleteBoard">
-        DELETE FROM TBL_BOARD WHERE BOARD_ID = #{boardId}
-    </delete>
 
-    <select id="selectAllByDateASC" resultType="BoardListDTO">
-        SELECT
-            B.BOARD_ID,
-            B.BOARD_TITLE,
-            U.NAME,
-            B.BOARD_VIEWS,
-            B.BOARD_REGISTER_DATE,
-            B.BOARD_UPDATE_DATE,
-            U.PROVIDER_ID,
-            (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
-        FROM
-            TBL_BOARD B JOIN TBL_USERS U
-        ON
-            U.PROVIDER_ID = B.PROVIDER_ID
-        ORDER BY
-            B.BOARD_UPDATE_DATE ASC
-    </select>
 
-    <select id="selectAllByViews" resultType="BoardListDTO">
-        SELECT
-            B.BOARD_ID,
-            B.BOARD_TITLE,
-            U.NAME,
-            B.BOARD_VIEWS,
-            B.BOARD_REGISTER_DATE,
-            B.BOARD_UPDATE_DATE,
-            U.PROVIDER_ID,
-            (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
-        FROM
-            TBL_BOARD B JOIN TBL_USERS U
-        ON
-            U.PROVIDER_ID = B.PROVIDER_ID
-        ORDER BY
-            B.BOARD_VIEWS DESC
-    </select>
+
 
 
 </mapper>

@@ -1,13 +1,19 @@
 package com.example.board.controller;
 
+import com.example.board.domain.dto.BoardDTO;
+import com.example.board.domain.dto.BoardDetailDTO;
 import com.example.board.domain.dto.BoardListDTO;
+import com.example.board.domain.dto.FileDTO;
+import com.example.board.domain.oauth.CustomOAuth2User;
 import com.example.board.service.BoardService;
+import com.example.board.service.FileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -17,6 +23,7 @@ import java.util.List;
 public class BoardController {
 
     private final BoardService boardService;
+    private final FileService fileService;
 
     @GetMapping("/list")
     public String list(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -41,6 +48,32 @@ public class BoardController {
         model.addAttribute("endPage", endPage);
 
         return "board/list";
+    }
+
+    // 게시글 작성 폼
+    @GetMapping("/write")
+    public String writeForm(Model model) {
+        model.addAttribute("board", new BoardDTO());
+        return "board/write";
+    }
+
+    // 게시글 작성 처리
+    @PostMapping("/write")
+    public String write(@ModelAttribute BoardDTO board, @RequestParam("files") List<MultipartFile> files, @RequestParam("providerId") String providerId, RedirectAttributes redirectAttributes) {
+        board.setProviderId(providerId);
+        boardService.insertBoard(board, files);
+        redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 등록되었습니다.");
+        return "redirect:/board/list";
+    }
+
+    // 게시글 조회
+    @GetMapping("/detail/{boardId}")
+    public String view(@PathVariable Long boardId, Model model, @AuthenticationPrincipal CustomOAuth2User customUser) {
+        BoardDetailDTO board = boardService.getBoardById(boardId, customUser);
+        List<FileDTO> files = fileService.getFileListByBoardId(boardId);
+        model.addAttribute("board", board);
+        model.addAttribute("files", files);
+        return "board/detail";
     }
 
 }

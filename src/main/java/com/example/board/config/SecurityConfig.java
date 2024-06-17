@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
@@ -24,6 +25,8 @@ public class SecurityConfig {
 //                .build();
 
         return http
+                // API서버나 RESTful 서비스에서는 CSRF 보호가 필요하지 않음.
+                .csrf(AbstractHttpConfigurer::disable)
                 // 요청에 대한 인증 및 인가를 설정.
                 .authorizeHttpRequests(auth -> auth
                         .anyRequest().permitAll()
