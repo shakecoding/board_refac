@@ -42,7 +42,7 @@ public class SecurityConfig {
                         logout -> logout
                         .logoutSuccessHandler((request, response, authentication) -> {
                             String clientId = "5618085d40e3ca0f01a1e415a47564bb";
-                            String logoutRedirectUri = "http://localhost:8090/board/list";
+                            String logoutRedirectUri = "http://localhost:8090";
                             String logoutUri = "https://kauth.kakao.com/oauth/logout?client_id=" + clientId + "&logout_redirect_uri=" + logoutRedirectUri;
                             response.sendRedirect(logoutUri);
                         })

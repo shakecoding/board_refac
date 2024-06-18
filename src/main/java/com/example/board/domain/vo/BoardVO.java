@@ -1,6 +1,7 @@
 package com.example.board.domain.vo;
 
 import com.example.board.domain.dto.BoardDTO;
+import com.example.board.domain.dto.BoardDetailDTO;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -42,6 +43,16 @@ public class BoardVO {
                 .boardViews(boardDTO.getBoardViews())
                 .boardRegisterDate(boardDTO.getBoardRegisterDate())
                 .boardUpdateDate(boardDTO.getBoardUpdateDate())
+                .build();
+    }
+
+    public static BoardVO toEntity(BoardDetailDTO boardDTO) {
+        return BoardVO.builder().boardId(boardDTO.getBoardId())
+                .boardTitle(boardDTO.getBoardTitle())
+                .providerId(boardDTO.getProviderId())
+                .boardContent(boardDTO.getBoardContent())
+                .boardViews(boardDTO.getBoardViews())
+                .boardRegisterDate(boardDTO.getBoardRegisterDate())
                 .build();
     }
 

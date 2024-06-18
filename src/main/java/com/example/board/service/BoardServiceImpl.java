@@ -97,4 +97,52 @@ public class BoardServiceImpl implements BoardService {
         }
         return boardMapper.selectBoardDetail(boardId);
     }
+
+    @Override
+    public void updateBoard(BoardDetailDTO board, List<MultipartFile> files) {
+
+        boardMapper.updateBoard(BoardVO.toEntity(board));
+        fileMapper.deleteFiles(board.getBoardId());
+
+        // 현재 날짜를 기반으로 폴더 경로 생성
+        LocalDate now = LocalDate.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        String datePath = now.format(formatter);
+
+        for (MultipartFile file : files) {
+            if (file.isEmpty()) continue; // 파일이 비어있으면 건너뜀
+
+            String originalFileName = file.getOriginalFilename();
+            String storedFileName = UUID.randomUUID().toString().replaceAll("-", "") + "_" + originalFileName;
+            Long fileSize = file.getSize();
+
+            try {
+                // 파일 저장 경로 설정
+                Path directoryPath = Paths.get("C:/upload/" + datePath);
+                if (!Files.exists(directoryPath)) {
+                    Files.createDirectories(directoryPath); // 폴더가 없으면 생성
+                }
+                Path filePath = directoryPath.resolve(storedFileName);
+                // 파일 저장
+                Files.copy(file.getInputStream(), filePath);
+
+                FileDTO fileDTO = new FileDTO();
+                fileDTO.setBoardId(board.getBoardId());
+                fileDTO.setOriginalFileName(originalFileName);
+                fileDTO.setStoredFileName(directoryPath + "/" + storedFileName);
+                fileDTO.setFileSize(fileSize);
+
+                fileMapper.insertFile(FileVO.toEntity(fileDTO)); // 파일 정보 저장
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
+
+    @Override
+    public void deleteBoard(Long boardId) {
+        boardMapper.deleteBoard(boardId);
+    }
 }

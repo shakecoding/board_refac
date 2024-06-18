@@ -76,4 +76,31 @@ public class BoardController {
         return "board/detail";
     }
 
+    // 게시글 수정 폼
+    @GetMapping("/edit/{boardId}")
+    public String editForm(@PathVariable Long boardId, Model model, @AuthenticationPrincipal CustomOAuth2User customUser) {
+        BoardDetailDTO board = boardService.getBoardById(boardId, customUser);
+        model.addAttribute("board", board);
+        return "board/edit";
+    }
+
+    // 게시글 수정 처리
+    @PostMapping("/edit")
+    public String update(BoardDetailDTO board, RedirectAttributes redirectAttributes, @RequestParam("files") List<MultipartFile> files) {
+        boardService.updateBoard(board, files);
+        redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 수정되었습니다.");
+        return "redirect:/board/detail/" + board.getBoardId();
+    }
+
+    // 게시글 삭제 처리
+    @PostMapping("/delete/{boardId}")
+    public String delete(@PathVariable Long boardId, RedirectAttributes redirectAttributes) {
+        boardService.deleteBoard(boardId);
+        redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 삭제되었습니다.");
+        return "redirect:/board/list";
+    }
+
+
+
+
 }

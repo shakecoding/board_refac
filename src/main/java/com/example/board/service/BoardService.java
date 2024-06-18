@@ -20,4 +20,10 @@ public interface BoardService {
 
     // 상세보기 페이지.
     BoardDetailDTO getBoardById(Long boardId, CustomOAuth2User customOAuth2User);
+
+    // 게시글 업데이트
+    void updateBoard(BoardDetailDTO board, List<MultipartFile> files);
+
+    // 게시글 삭제
+    void deleteBoard(Long boardId);
 }

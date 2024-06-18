@@ -77,7 +77,19 @@
         WHERE BOARD_ID = #{boardId}
     </update>
 
+<!--  게시글 수정  -->
+    <update id="updateBoard">
+        UPDATE TBL_BOARD
+        SET BOARD_TITLE = #{boardTitle},
+            BOARD_CONTENT = #{boardContent},
+            BOARD_UPDATE_DATE = SYSDATE
+        WHERE BOARD_ID = #{boardId}
+    </update>
 
+<!--  게시글 삭제  -->
+    <delete id="deleteBoard">
+        DELETE FROM TBL_BOARD WHERE BOARD_ID = #{boardId}
+    </delete>
 
 
 

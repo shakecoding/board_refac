@@ -26,6 +26,11 @@ public interface BoardMapper {
     // 조회수 +1
     void plusViews(Long boardId);
 
+    // 게시글 업데이트
+    void updateBoard(BoardVO board);
+
+    // 게시글 삭제
+    void deleteBoard(Long boardId);
 
 
 }

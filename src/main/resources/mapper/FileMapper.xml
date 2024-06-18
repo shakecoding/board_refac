@@ -35,6 +35,7 @@
             file_id = #{fileId}
     </select>
 
+<!--  게시글 수정 시 본래 첨부파일 삭제  -->
     <delete id="deleteFiles">
         DELETE FROM TBL_FILE
         WHERE BOARD_ID = #{boardId}
