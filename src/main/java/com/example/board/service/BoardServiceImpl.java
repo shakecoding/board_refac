@@ -5,6 +5,7 @@ import com.example.board.domain.dto.BoardDetailDTO;
 import com.example.board.domain.dto.BoardListDTO;
 import com.example.board.domain.dto.FileDTO;
 import com.example.board.domain.oauth.CustomOAuth2User;
+import com.example.board.domain.util.PagedResponse;
 import com.example.board.domain.vo.BoardVO;
 import com.example.board.domain.vo.FileVO;
 import com.example.board.mapper.BoardMapper;
@@ -145,4 +146,52 @@ public class BoardServiceImpl implements BoardService {
     public void deleteBoard(Long boardId) {
         boardMapper.deleteBoard(boardId);
     }
+
+    @Override
+    public PagedResponse<BoardListDTO> selectAllByDateDESC(int page, int pageSize) {
+        int startRow = (page - 1) * pageSize;
+        int endRow = startRow + pageSize;
+
+        int totalBoard = boardMapper.countBoard();
+        int totalPages = (int) Math.ceil((double) totalBoard / pageSize);
+
+        int pageGroupSize = 5;
+        int startPage = ((page - 1) / pageGroupSize) * pageGroupSize + 1;
+        int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+        return new PagedResponse<>(boardMapper.selectAll(startRow, endRow), page, totalPages, pageSize, totalBoard);
+    }
+
+    @Override
+    public PagedResponse<BoardListDTO> selectAllByDateASC(int page, int pageSize) {
+        int startRow = (page - 1) * pageSize;
+        int endRow = startRow + pageSize;
+
+        int totalBoard = boardMapper.countBoard();
+        int totalPages = (int) Math.ceil((double) totalBoard / pageSize);
+
+        int pageGroupSize = 5;
+        int startPage = ((page - 1) / pageGroupSize) * pageGroupSize + 1;
+        int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+        return new PagedResponse<>(boardMapper.selectAllByDateASC(startRow, endRow), page, totalPages, pageSize, totalBoard);
+
+    }
+
+    @Override
+    public PagedResponse<BoardListDTO> selectAllByViews(int page, int pageSize) {
+        int startRow = (page - 1) * pageSize;
+        int endRow = startRow + pageSize;
+
+        int totalBoard = boardMapper.countBoard();
+        int totalPages = (int) Math.ceil((double) totalBoard / pageSize);
+
+        int pageGroupSize = 5;
+        int startPage = ((page - 1) / pageGroupSize) * pageGroupSize + 1;
+        int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+        return new PagedResponse<>(boardMapper.selectAllByViews(startRow, endRow), page, totalPages, pageSize, totalBoard);
+    }
+
+
 }

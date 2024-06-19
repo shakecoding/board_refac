@@ -92,6 +92,62 @@
     </delete>
 
 
+<!-- 오래된 순 -->
+    <select id="selectAllByDateASC" resultType="BoardListDTO">
+        SELECT *
+        FROM (
+                 SELECT ROWNUM AS RN, BOARD.*
+                 FROM (
+                          SELECT
+                              B.BOARD_ID,
+                              B.BOARD_TITLE,
+                              U.NAME,
+                              B.BOARD_VIEWS,
+                              B.BOARD_REGISTER_DATE,
+                              B.BOARD_UPDATE_DATE,
+                              U.PROVIDER_ID,
+                              (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
+                          FROM
+                              TBL_BOARD B JOIN TBL_USERS U
+                                               ON
+                                                   U.PROVIDER_ID = B.PROVIDER_ID
+                          ORDER BY
+                              B.BOARD_UPDATE_DATE ASC
+                      ) BOARD
+                 WHERE ROWNUM &lt;= #{endRow}
+             )
+        WHERE rn &gt; #{startRow}
+    </select>
+
+<!--  조회 순  -->
+    <select id="selectAllByViews" resultType="BoardListDTO">
+        SELECT *
+        FROM (
+                 SELECT ROWNUM AS RN, BOARD.*
+                 FROM (
+                          SELECT
+                              B.BOARD_ID,
+                              B.BOARD_TITLE,
+                              U.NAME,
+                              B.BOARD_VIEWS,
+                              B.BOARD_REGISTER_DATE,
+                              B.BOARD_UPDATE_DATE,
+                              U.PROVIDER_ID,
+                              (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
+                          FROM
+                              TBL_BOARD B JOIN TBL_USERS U
+                                               ON
+                                                   U.PROVIDER_ID = B.PROVIDER_ID
+                          ORDER BY
+                              B.BOARD_VIEWS DESC
+                      ) BOARD
+                 WHERE ROWNUM &lt;= #{endRow}
+             )
+        WHERE rn &gt; #{startRow}
+
+    </select>
+
+
 
 
 </mapper>

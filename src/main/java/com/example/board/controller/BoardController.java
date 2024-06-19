@@ -100,6 +100,31 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
+    // 동적 게시글 페이지 이동
+    @GetMapping("/sort")
+    public String sort(Model model,
+                       @RequestParam(value = "page", defaultValue = "1") int page,
+                       @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+
+        int totalBoard = boardService.getBoardCount();
+        int totalPages = (int) Math.ceil((double) totalBoard / pageSize);
+
+        int pageGroupSize = 5;
+        int startPage = ((page - 1) / pageGroupSize) * pageGroupSize + 1;
+        int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+        List<BoardListDTO> boards = boardService.getBoardList(page, pageSize);
+
+        model.addAttribute("boards", boards);
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("pageSize", pageSize);
+
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+
+        return "board/restList";
+    }
 
 
 

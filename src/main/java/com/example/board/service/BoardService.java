@@ -4,6 +4,7 @@ import com.example.board.domain.dto.BoardDTO;
 import com.example.board.domain.dto.BoardDetailDTO;
 import com.example.board.domain.dto.BoardListDTO;
 import com.example.board.domain.oauth.CustomOAuth2User;
+import com.example.board.domain.util.PagedResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -26,4 +27,8 @@ public interface BoardService {
 
     // 게시글 삭제
     void deleteBoard(Long boardId);
+
+    PagedResponse<BoardListDTO> selectAllByDateDESC(int page, int pageSize);
+    PagedResponse<BoardListDTO> selectAllByDateASC(int page, int pageSize);
+    PagedResponse<BoardListDTO> selectAllByViews(int page, int pageSize);
 }

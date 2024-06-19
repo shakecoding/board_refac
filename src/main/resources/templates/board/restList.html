@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Board List</title>
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/list.css}">
+</head>
+<body>
+<!-- 헤더 포함 -->
+<div th:replace="~{/layout/header :: header}"></div>
+
+<div class="content">
+    <div class="board-title">게시판 목록</div>
+
+    <div class="sorting-options">
+        <input type="radio" id="sort-newest" name="sort-option" value="newest" checked>
+        <label for="sort-newest">최신순</label>
+
+        <input type="radio" id="sort-oldest" name="sort-option" value="oldest">
+        <label for="sort-oldest">오래된 순</label>
+
+        <input type="radio" id="sort-views" name="sort-option" value="views">
+        <label for="sort-views">조회순</label>
+    </div>
+
+    <div class="write-button-container">
+        <a th:href="@{/board/write}" class="btn-write" sec:authorize="isAuthenticated()">글 작성</a>
+    </div>
+    <table class="board-table table">
+        <thead>
+        <tr>
+            <th class="number">번호</th>
+            <th class="title">제목</th>
+            <th class="writer">작성자</th>
+            <th class="views">조회수</th>
+            <th class="date">작성일</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+    <ul class="pagination">
+
+    </ul>
+</div>
+
+<!-- 푸터 포함 -->
+<div  class="footer" style="position: fixed; bottom: 0">
+    <div class="footer" th:replace="~{/layout/footer :: footer}"></div>
+</div>
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script>
+    let currentPage = 1;
+    const pageSize = 10; // Define page size
+
+    // 날짜 포맷
+    function formatDate(dateString) {
+        const now = new Date();
+        const commentDate = new Date(dateString); // 문자열을 Date 객체로 변환
+
+        const nowYear = now.getFullYear();
+        const nowMonth = now.getMonth();
+        const nowDate = now.getDate();
+
+        const commentYear = commentDate.getFullYear();
+        const commentMonth = commentDate.getMonth();
+        const commentDateDate = commentDate.getDate();
+
+        let displayText = "";
+
+        // 년, 월, 일이 모두 같은 경우 "오늘"로 표시
+        if (nowYear === commentYear && nowMonth === commentMonth && nowDate === commentDateDate) {
+            displayText = "오늘";
+        } else {
+            // 그 외의 경우, 정해진 포맷으로 표시
+            const yy = commentYear.toString().slice(-2);
+            const M = commentMonth + 1; // 월은 0부터 시작하므로 1을 더해줍니다.
+            const d = commentDateDate;
+            const HH = commentDate.getHours();
+            const mm = commentDate.getMinutes().toString().padStart(2, '0');
+
+            displayText = `${yy}년 ${M}월 ${d}일 ${HH}시 ${mm}분`;
+        }
+        return displayText;
+    }
+
+    // 정렬 옵션 및 페이지에 따라 게시글 목록을 가져오는 AJAX 요청
+    function fetchSortedPosts(sortOption, page) {
+        $.ajax({
+            type: 'GET',
+            url: '/api/board/sorted-list', // 실제 요청을 처리할 서버의 API 엔드포인트로 변경해야 합니다.
+            data: { sort: sortOption, page: page, pageSize: pageSize },
+            success: function(response) {
+                renderPosts(response.content); // 수정된 부분
+                renderPagination(response); // 수정된 부분
+            },
+            error: function(xhr, status, error) {
+                console.error('게시글 목록을 가져오는 데 실패했습니다.', error);
+                // 에러 처리 로직을 구현합니다.
+            }
+        });
+    }
+
+    // 라디오 버튼 변경 이벤트 리스너
+    $('input[name="sort-option"]').change(function() {
+        var selectedOption = $(this).val();
+        fetchSortedPosts(selectedOption, 1); // 변경된 옵션을 인자로 AJAX 함수 호출
+    });
+
+    // 페이지가 로드될 때 기본으로 최신순 게시글 목록을 가져오는 AJAX 요청
+    $(document).ready(function() {
+        fetchSortedPosts('newest', 1);
+    });
+
+    function renderPosts(posts) {
+        const postsContainer = $('.table tbody');
+        postsContainer.empty(); // 기존 목록을 비웁니다.
+
+        posts.forEach(function(post) {
+            // 첨부파일이 0개가 아니면 파일 개수를 보여주는 문자열을 생성하고, 아니면 빈 문자열을 사용합니다.
+            const fileCountString = post.fileCount > 0 ? ` [첨부파일:${post.fileCount}]` : '';
+
+            const postRow = `
+    <tr>
+        <td class="number">${post.boardId}</td>
+        <td class="title"><a href="/board/detail/${post.boardId}">${post.boardTitle}${fileCountString}</a></td>
+        <td class="author">${post.name}</td>
+        <td class="views">${post.boardViews}</td>
+        <td class="date">${formatDate(post.boardRegisterDate)}${post.boardRegisterDate !== post.boardUpdateDate ? ' (수정)' : ''}</td>
+    </tr>
+`;
+            postsContainer.append(postRow); // 게시글 행을 목록에 추가합니다.
+        });
+    }
+
+    function renderPagination(pagination) {
+        const paginationContainer = $('.pagination');
+        paginationContainer.empty(); // 기존 페이지네이션을 비웁니다.
+
+        // Previous button
+        const prevDisabled = pagination.currentPage === 1 ? 'disabled' : '';
+        paginationContainer.append(`
+    <li class="page-item ${prevDisabled}">
+        <a class="page-link" href="#" aria-label="Previous" data-page="${pagination.currentPage - 1}">
+            <span aria-hidden="true">&laquo;</span>
+        </a>
+    </li>
+<!--  나중에 클릭 이벤트가 일어나면 data('page') 를 통해 값을 가져올 수 있다.  -->
+`);
+
+        // Page numbers
+        for (let i = pagination.startPage; i <= pagination.endPage; i++) {
+            const activeClass = pagination.currentPage === i ? 'active' : '';
+            paginationContainer.append(`
+        <li class="page-item ${activeClass}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a>
+        </li>
+    `);
+        }
+
+        // Next button
+        const nextDisabled = pagination.currentPage === pagination.totalPages ? 'disabled' : '';
+        paginationContainer.append(`
+    <li class="page-item ${nextDisabled}">
+        <a class="page-link" href="#" aria-label="Next" data-page="${pagination.currentPage + 1}">
+            <span aria-hidden="true">&raquo;</span>
+        </a>
+    </li>
+`);
+
+        // Attach click event for pagination links
+        $('.page-link').click(function(event) {
+            event.preventDefault();
+            const selectedPage = $(this).data('page');
+            fetchSortedPosts($('input[name="sort-option"]:checked').val(), selectedPage);
+        });
+    }
+
+</script>
+</html>

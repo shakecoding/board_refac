@@ -32,5 +32,9 @@ public interface BoardMapper {
     // 게시글 삭제
     void deleteBoard(Long boardId);
 
+    List<BoardListDTO> selectAllByDateASC(int startRow, int endRow);
+
+    List<BoardListDTO> selectAllByViews(int startRow, int endRow);
+
 
 }
