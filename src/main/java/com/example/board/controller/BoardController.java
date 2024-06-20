@@ -1,10 +1,9 @@
 package com.example.board.controller;
 
-import com.example.board.domain.dto.BoardDTO;
-import com.example.board.domain.dto.BoardDetailDTO;
-import com.example.board.domain.dto.BoardListDTO;
-import com.example.board.domain.dto.FileDTO;
+import com.example.board.domain.dto.*;
 import com.example.board.domain.oauth.CustomOAuth2User;
+import com.example.board.domain.vo.UsersVO;
+import com.example.board.mapper.UsersMapper;
 import com.example.board.service.BoardService;
 import com.example.board.service.FileService;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +23,7 @@ public class BoardController {
 
     private final BoardService boardService;
     private final FileService fileService;
+    private final UsersMapper usersMapper;
 
     @GetMapping("/list")
     public String list(@RequestParam(value = "page", defaultValue = "1") int page,
@@ -124,6 +124,28 @@ public class BoardController {
         model.addAttribute("endPage", endPage);
 
         return "board/restList";
+    }
+
+    // 로그인 폼과의 콜라보
+    @GetMapping("/join")
+    public String join() {
+        return "board/joinForm";
+    }
+
+    @PostMapping("/join")
+    public String processAdditionalInfo(@RequestParam String phoneNumber,
+                                        @RequestParam String address,
+                                        @AuthenticationPrincipal CustomOAuth2User customUser) {
+
+        UsersDTO dto = usersMapper.findByProviderId(customUser.getProviderId());
+
+        dto.setRole("basic");
+        dto.setPhoneNumber(phoneNumber);
+        dto.setAddress(address);
+
+        usersMapper.insertNewUser(UsersVO.toEntity(dto));
+
+        return "redirect:/board/list";
     }
 
 

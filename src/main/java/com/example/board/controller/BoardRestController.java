@@ -20,16 +20,10 @@ public class BoardRestController {
     private final BoardService boardService;
 
     @GetMapping("/sorted-list")
-    public ResponseEntity<PagedResponse<BoardListDTO>> getSortedBoardList(@RequestParam String sort,
+    public ResponseEntity<PagedResponse<BoardListDTO>> getSortedBoardList(@RequestParam(value = "sort", defaultValue = "") String sort,
                                                                  @RequestParam(value = "page", defaultValue = "1") int page,
                                                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
-        PagedResponse<BoardListDTO> sortedBoards = switch (sort) {
-            case "oldest" -> boardService.selectAllByDateDESC(page, pageSize);
-            case "views" -> boardService.selectAllByViews(page, pageSize);
-            default -> boardService.selectAllByDateASC(page, pageSize);
-        };
-
-//        switch (sort) {
+        //        switch (sort) {
 //            case "newest":
 //                sortedBoards = boardService.getBoardList(page, pageSize);
 //                break;
@@ -42,7 +36,15 @@ public class BoardRestController {
 //            default:
 //                sortedBoards = boardService.getBoardList(page, pageSize);
 //        }
-        log.info(sortedBoards.toString());
+
+//        PagedResponse<BoardListDTO> sortedBoards = switch (sort) {
+//            case "oldest" -> boardService.selectAllByDateDESC(page, pageSize);
+//            case "views" -> boardService.selectAllByViews(page, pageSize);
+//            default -> boardService.selectAllByDateASC(page, pageSize);
+//        };
+
+        // 동적 쿼리
+        PagedResponse<BoardListDTO> sortedBoards = boardService.selectDQuery(page, pageSize, sort);
 
         return ResponseEntity.ok(sortedBoards);
     }

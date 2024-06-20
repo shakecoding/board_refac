@@ -11,7 +11,7 @@
 
     <!--  사용자 정보 저장  -->
     <insert id="saveUser">
-        insert into tbl_users
+        insert into tbl_users (name, PROFILE_PIC, PROVIDER, PROVIDER_ID, CREATE_AT, UPDATE_AT)
         values (#{name}, #{profilePic}, #{provider}, #{providerId}, sysdate, sysdate)
     </insert>
 
@@ -19,6 +19,13 @@
     <update id="updateUser">
         update tbl_users
         set name = #{name}, profile_pic = #{profilePic}, update_at = sysdate
+        where provider_id = #{providerId}
+    </update>
+
+<!--  새로운 사람 회원 가입  -->
+    <update id="insertNewUser">
+        update tbl_users
+        set PHONE_NUMBER = #{phoneNumber}, ADDRESS = #{address}, role = #{role}
         where provider_id = #{providerId}
     </update>
 

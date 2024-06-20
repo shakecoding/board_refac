@@ -31,4 +31,7 @@ public interface BoardService {
     PagedResponse<BoardListDTO> selectAllByDateDESC(int page, int pageSize);
     PagedResponse<BoardListDTO> selectAllByDateASC(int page, int pageSize);
     PagedResponse<BoardListDTO> selectAllByViews(int page, int pageSize);
+
+
+    PagedResponse<BoardListDTO> selectDQuery(int page, int pageSize, String sort);
 }

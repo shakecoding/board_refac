@@ -193,5 +193,20 @@ public class BoardServiceImpl implements BoardService {
         return new PagedResponse<>(boardMapper.selectAllByViews(startRow, endRow), page, totalPages, pageSize, totalBoard);
     }
 
+    @Override
+    public PagedResponse<BoardListDTO> selectDQuery(int page, int pageSize, String sort) {
+        int startRow = (page - 1) * pageSize;
+        int endRow = startRow + pageSize;
+
+        int totalBoard = boardMapper.countBoard();
+        int totalPages = (int) Math.ceil((double) totalBoard / pageSize);
+
+        int pageGroupSize = 5;
+        int startPage = ((page - 1) / pageGroupSize) * pageGroupSize + 1;
+        int endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+
+        return new PagedResponse<>(boardMapper.selectDQuery(startRow, endRow, sort), page, totalPages, pageSize, totalBoard);
+    }
+
 
 }

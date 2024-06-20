@@ -37,4 +37,8 @@ public interface BoardMapper {
     List<BoardListDTO> selectAllByViews(int startRow, int endRow);
 
 
+    // 동적 쿼리
+    List<BoardListDTO> selectDQuery(int startRow, int endRow, String sort);
+
+
 }

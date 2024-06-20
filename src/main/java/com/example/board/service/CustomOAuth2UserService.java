@@ -45,21 +45,23 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         loginUser.setProfilePic(profileUrl);
         loginUser.setProvider(userRequest.getClientRegistration().getRegistrationId()); // OAuth2 공급자의 이름
 
-        UsersVO user = UsersVO.toEntity(loginUser);
+
         // DB 저장 및 업데이트 로직
         UsersDTO existingUser = usersMapper.findByProviderId(providerId);
         
         // 우리 애플리케이션에 가입한 적이 없는 OAuth 계정
         if(existingUser == null){
             // insert
+            loginUser.setRole("New");
+            UsersVO user = UsersVO.toEntity(loginUser);
             usersMapper.saveUser(user);
         }
         // 가입 이력이 있다면, 정보 업데이트
         else {
+            UsersVO user = UsersVO.toEntity(loginUser);
             usersMapper.updateUser(user);
         }
-        System.out.println(oAuth2User);
 //        return oAuth2User;
-        return new CustomOAuth2User(oAuth2User, name, profileUrl, providerId);
+        return new CustomOAuth2User(oAuth2User, name, profileUrl, providerId, loginUser.getPhoneNumber(), loginUser.getAddress(), loginUser.getRole());
     }
 }
