@@ -164,8 +164,17 @@
                               (SELECT COUNT(*) FROM TBL_FILE F WHERE F.BOARD_ID = B.BOARD_ID) AS FILE_COUNT
                           FROM
                               TBL_BOARD B JOIN TBL_USERS U
-                                               ON
-                                                   U.PROVIDER_ID = B.PROVIDER_ID
+                              ON
+                              U.PROVIDER_ID = B.PROVIDER_ID
+                          <!-- 추 후에 search 추가 -->
+                          <where>
+                              <if test="search != null">
+                                <choose>
+                                    <when test="searchType == 'title'">B.BOARD_TITLE LIKE '%' || #{search} || '%'</when>
+                                    <when test="searchType == 'content'">B.BOARD_CONTENT LIKE '%' || #{search} || '%'</when>
+                                </choose>
+                              </if>
+                          </where>
                           ORDER BY
                               <choose>
                                 <when test="sort == 'views'">B.BOARD_VIEWS DESC</when>

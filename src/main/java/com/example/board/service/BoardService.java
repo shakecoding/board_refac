@@ -33,5 +33,5 @@ public interface BoardService {
     PagedResponse<BoardListDTO> selectAllByViews(int page, int pageSize);
 
 
-    PagedResponse<BoardListDTO> selectDQuery(int page, int pageSize, String sort);
+    PagedResponse<BoardListDTO> selectDQuery(int page, int pageSize, String sort, String search, String searchType);
 }

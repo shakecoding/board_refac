@@ -22,7 +22,9 @@ public class BoardRestController {
     @GetMapping("/sorted-list")
     public ResponseEntity<PagedResponse<BoardListDTO>> getSortedBoardList(@RequestParam(value = "sort", defaultValue = "") String sort,
                                                                  @RequestParam(value = "page", defaultValue = "1") int page,
-                                                                 @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+                                                                 @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
+                                                               @RequestParam(value = "search") String search,
+                                                               @RequestParam(value = "searchType") String searchType) {
         //        switch (sort) {
 //            case "newest":
 //                sortedBoards = boardService.getBoardList(page, pageSize);
@@ -44,7 +46,7 @@ public class BoardRestController {
 //        };
 
         // 동적 쿼리
-        PagedResponse<BoardListDTO> sortedBoards = boardService.selectDQuery(page, pageSize, sort);
+        PagedResponse<BoardListDTO> sortedBoards = boardService.selectDQuery(page, pageSize, sort, search, searchType);
 
         return ResponseEntity.ok(sortedBoards);
     }

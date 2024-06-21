@@ -23,6 +23,16 @@
         <input type="radio" id="sort-views" name="sort-option" value="views">
         <label for="sort-views">조회순</label>
     </div>
+    <label>
+        <select name="search-type" id="type">
+            <option value="title">제목</option>
+            <option value="content">본문</option>
+        </select>
+    </label>
+    <label>
+        <input type="text" name="search">
+        <button class="search-btn" type="button" onclick="saveKeyword()">검색</button>
+    </label>
 
     <div class="write-button-container">
         <a th:href="@{/board/write}" class="btn-write" sec:authorize="isAuthenticated()">글 작성</a>
@@ -55,6 +65,9 @@
 <script>
     let currentPage = 1;
     const pageSize = 10; // Define page size
+    let search = null;
+    let searchType = null;
+    let sort = 'newest';
 
     // 날짜 포맷
     function formatDate(dateString) {
@@ -88,11 +101,14 @@
     }
 
     // 정렬 옵션 및 페이지에 따라 게시글 목록을 가져오는 AJAX 요청
-    function fetchSortedPosts(sortOption, page) {
+    function fetchSortedPosts(page) {
         $.ajax({
             type: 'GET',
             url: '/api/board/sorted-list', // 실제 요청을 처리할 서버의 API 엔드포인트로 변경해야 합니다.
-            data: { sort: sortOption, page: page, pageSize: pageSize },
+            // data: { sort: sortOption, page: page, pageSize: pageSize },
+
+            // 추 후에 search 추가
+            data: { sort: sort, page: page, pageSize: pageSize, search:search, searchType:searchType },
             success: function(response) {
                 renderPosts(response.content); // 수정된 부분
                 renderPagination(response); // 수정된 부분
@@ -106,13 +122,28 @@
 
     // 라디오 버튼 변경 이벤트 리스너
     $('input[name="sort-option"]').change(function() {
-        var selectedOption = $(this).val();
-        fetchSortedPosts(selectedOption, 1); // 변경된 옵션을 인자로 AJAX 함수 호출
+        sort = $(this).val();
+        fetchSortedPosts(1); // 변경된 옵션을 인자로 AJAX 함수 호출
     });
 
     // 페이지가 로드될 때 기본으로 최신순 게시글 목록을 가져오는 AJAX 요청
     $(document).ready(function() {
-        fetchSortedPosts('newest', 1);
+        // LocalStorage에서 검색 조건 복원
+        search = localStorage.getItem('search');
+        searchType = localStorage.getItem('searchType');
+
+        // 검색 조건이 있으면 입력 필드에 설정
+        if (search) {
+            $('input[name="search"]').val(search);
+        }
+        if (searchType) {
+            $('select[name="search-type"]').val(searchType);
+        }
+        if (sort) {
+            $('input[name="sort-option"]').val(searchType);
+        }
+
+        fetchSortedPosts(1);
     });
 
     function renderPosts(posts) {
@@ -177,6 +208,22 @@
             const selectedPage = $(this).data('page');
             fetchSortedPosts($('input[name="sort-option"]:checked').val(), selectedPage);
         });
+    }
+
+    function saveKeyword(){
+        let keyword = $('input[name="search"]').val();
+        let type = $('select[name="search-type"]').val();
+
+
+        search = keyword === '' ? null : keyword
+        searchType = type ? type : null
+
+        // 검색 조건을 LocalStorage에 저장
+        localStorage.setItem('search', search);
+        localStorage.setItem('searchType', searchType);
+        localStorage.setItem('sort', sort);
+
+        fetchSortedPosts(1);
     }
 
 </script>

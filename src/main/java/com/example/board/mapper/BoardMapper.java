@@ -38,7 +38,8 @@ public interface BoardMapper {
 
 
     // 동적 쿼리
-    List<BoardListDTO> selectDQuery(int startRow, int endRow, String sort);
+    // search 는 추후 추가
+    List<BoardListDTO> selectDQuery(int startRow, int endRow, String sort, String search, String searchType);
 
 
 }
