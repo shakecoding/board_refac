@@ -34,9 +34,7 @@
         </div>
         <div class="mb-3">
             <div class="form-label">내용</div>
-            <label>
-                <textarea class="form-control" rows="6" readonly th:text="${board.boardContent}"></textarea>
-            </label>
+            <div class="form-control" th:utext="${board.boardContent}"></div>
         </div>
         <div class="mb-3">
             <div class="form-label">작성자</div>
@@ -47,9 +45,7 @@
         <div class="mb-3">
             <div class="form-label">작성일</div>
             <label>
-                <input type="text" class="form-control"
-                       th:value="${#temporals.format(board.boardRegisterDate, 'yy년 M월 d일 HH시 mm분')}"
-                       readonly/>
+                <input type="text" class="form-control" th:value="${#temporals.format(board.boardRegisterDate, 'yy년 M월 d일 HH시 mm분')}" readonly/>
             </label>
         </div>
         <div class="mb-3">
@@ -64,8 +60,7 @@
                 <div class="uploadResult">
                     <ul>
                         <li th:each="file : ${files}">
-                            <a th:href="@{/download/{fileId}(fileId=${file.fileId})}"
-                               th:text="${file.originalFileName}"></a>
+                            <a th:href="@{/download/{fileId}(fileId=${file.fileId})}" th:text="${file.originalFileName}"></a>
                             <span th:text="${file.fileSize / 1024 + ' KB'}"></span>
                         </li>
                     </ul>
@@ -93,8 +88,7 @@
             <form id="commentForm" th:method="post">
                 <div class="mb-3">
                     <label for="commentContent" class="form-label">댓글 남기기</label>
-                    <textarea class="form-control" id="commentContent" rows="3"
-                              placeholder="여기에 댓글을 입력하세요..."></textarea>
+                    <textarea class="form-control" id="commentContent" rows="3" placeholder="여기에 댓글을 입력하세요..."></textarea>
                     <button type="button" class="btn btn-primary" onclick="addComment()">댓글 작성</button>
                 </div>
 

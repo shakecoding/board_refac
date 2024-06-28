@@ -59,7 +59,7 @@ public class BoardController {
 
     // 게시글 작성 처리
     @PostMapping("/write")
-    public String write(@ModelAttribute BoardDTO board, @RequestParam("files") List<MultipartFile> files, @RequestParam("providerId") String providerId, RedirectAttributes redirectAttributes) {
+    public String write(@ModelAttribute BoardDTO board, @RequestParam("boardfiles") List<MultipartFile> files, @RequestParam("providerId") String providerId, RedirectAttributes redirectAttributes) {
         board.setProviderId(providerId);
         boardService.insertBoard(board, files);
         redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 등록되었습니다.");
@@ -86,7 +86,7 @@ public class BoardController {
 
     // 게시글 수정 처리
     @PostMapping("/edit")
-    public String update(BoardDetailDTO board, RedirectAttributes redirectAttributes, @RequestParam("files") List<MultipartFile> files) {
+    public String update(BoardDetailDTO board, RedirectAttributes redirectAttributes, @RequestParam("boardfiles") List<MultipartFile> files) {
         boardService.updateBoard(board, files);
         redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 수정되었습니다.");
         return "redirect:/board/detail/" + board.getBoardId();
