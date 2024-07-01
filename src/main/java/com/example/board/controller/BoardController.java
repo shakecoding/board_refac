@@ -60,6 +60,7 @@ public class BoardController {
     // 게시글 작성 처리
     @PostMapping("/write")
     public String write(@ModelAttribute BoardDTO board, @RequestParam("boardfiles") List<MultipartFile> files, @RequestParam("providerId") String providerId, RedirectAttributes redirectAttributes) {
+        System.out.println(board.getBoardContent());
         board.setProviderId(providerId);
         boardService.insertBoard(board, files);
         redirectAttributes.addFlashAttribute("message", "게시글이 성공적으로 등록되었습니다.");
