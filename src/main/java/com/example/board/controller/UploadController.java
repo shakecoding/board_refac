@@ -36,7 +36,7 @@ public class UploadController {
             String storedFileName = UUID.randomUUID().toString().replaceAll("-", "") + "_" + originalFileName;
 
             // 파일 저장 경로 설정 (프로젝트의 정적 자원 경로에 저장)
-            Path directoryPath = Paths.get("src/main/resources/static/uploads/" + datePath + "/summernote/");
+            Path directoryPath = Paths.get("src/main/resources/static/uploads/" + datePath);
             if (!Files.exists(directoryPath)) {
                 Files.createDirectories(directoryPath); // 폴더가 없으면 생성
             }

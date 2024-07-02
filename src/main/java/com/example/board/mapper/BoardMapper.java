@@ -41,5 +41,6 @@ public interface BoardMapper {
     // search 는 추후 추가
     List<BoardListDTO> selectDQuery(int startRow, int endRow, String sort, String search, String searchType);
 
+    int countDBoard(String search, String searchType);
 
 }

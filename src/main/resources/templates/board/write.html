@@ -39,7 +39,6 @@
         <input type="hidden" name="providerId" th:value="${#authentication.getPrincipal().getProviderId()}">
     </form>
 </div>
-<img src="/uploads/2024/06/28/summernote/73f6522d7e214e5f97160032c9adffd5_hogeun.jpg">
 <!-- 푸터 포함 -->
 <div th:replace="~{/layout/footer :: footer}"></div>
 
@@ -52,42 +51,46 @@
 
     function initializeSummernote() {
         $('#boardContent').summernote({
-            height: 300,
+            // height: 300,
             tabsize: 2,
-            placeholder: '내용을 입력하세요...'
-            // callbacks: {
-            //     onImageUpload: function(files) {
-            //         for (let i = 0; i < files.length; i++) {
-            //             uploadImage(files[i]);
-            //         }
-            //     }
-            // }
+            placeholder: '내용을 입력하세요...',
+            callbacks: {
+                onImageUpload: function(files) {
+                    for (let i = 0; i < files.length; i++) {
+                        uploadImage(files[i], this);
+                    }
+                }
+            }
         });
     }
-    //
-    // function uploadImage(file) {
-    //     let data = new FormData();
-    //     data.append("file", file);
-    //     $.ajax({
-    //         url: '/upload/image',
-    //         cache: false,
-    //         contentType: false,
-    //         processData: false,
-    //         data: data,
-    //         method: "post",
-    //         success: function(url) {
-    //             insertImageToSummernote(url);
-    //         },
-    //         error: function(data) {
-    //             console.error(data);
-    //         }
-    //     });
-    // }
-    //
-    // function insertImageToSummernote(url) {
-    //     const $img = $('<img>').attr({ src: url });
-    //     $('#boardContent').summernote('insertNode', $img[0]);
-    // }
+
+    function uploadImage(file) {
+        let data = new FormData();
+        data.append("file", file);
+        $.ajax({
+            url: '/upload/image',
+            cache: false,
+            contentType: false,
+            processData: false,
+            enctype : 'multipart/form-data',
+            data: data,
+            method: "post",
+            success: function(url) {
+                console.log(url)
+                insertImageToSummernote(url);
+            },
+            error: function(data) {
+                console.error(data);
+            }
+        });
+    }
+
+    function insertImageToSummernote(url) {
+        const img = document.createElement('img');
+        img.src = url;
+        img.style.width = '100%';
+        $('#boardContent').summernote('insertNode', img);
+    }
 </script>
 
 </body>

@@ -110,6 +110,8 @@
             // 추 후에 search 추가
             data: { sort: sort, page: page, pageSize: pageSize, search:search, searchType:searchType },
             success: function(response) {
+                console.log(search)
+                console.log(typeof search)
                 renderPosts(response.content); // 수정된 부분
                 renderPagination(response); // 수정된 부분
             },
@@ -123,6 +125,7 @@
     // 라디오 버튼 변경 이벤트 리스너
     $('input[name="sort-option"]').change(function() {
         sort = $(this).val();
+        localStorage.setItem('sort', sort);
         fetchSortedPosts(1); // 변경된 옵션을 인자로 AJAX 함수 호출
     });
 
@@ -133,14 +136,17 @@
         searchType = localStorage.getItem('searchType');
 
         // 검색 조건이 있으면 입력 필드에 설정
-        if (search) {
+        if (search !== 'null') {
             $('input[name="search"]').val(search);
+        }
+        else {
+            search = '';
         }
         if (searchType) {
             $('select[name="search-type"]').val(searchType);
         }
         if (sort) {
-            $('input[name="sort-option"]').val(searchType);
+            sort = localStorage.getItem('sort')
         }
 
         fetchSortedPosts(1);
@@ -206,7 +212,7 @@
         $('.page-link').click(function(event) {
             event.preventDefault();
             const selectedPage = $(this).data('page');
-            fetchSortedPosts($('input[name="sort-option"]:checked').val(), selectedPage);
+            fetchSortedPosts(selectedPage);
         });
     }
 

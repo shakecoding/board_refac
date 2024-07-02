@@ -198,7 +198,8 @@ public class BoardServiceImpl implements BoardService {
         int startRow = (page - 1) * pageSize;
         int endRow = startRow + pageSize;
 
-        int totalBoard = boardMapper.countBoard();
+        // 얘 수정
+        int totalBoard = boardMapper.countDBoard(search, searchType);
         int totalPages = (int) Math.ceil((double) totalBoard / pageSize);
 
         int pageGroupSize = 5;

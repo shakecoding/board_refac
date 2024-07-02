@@ -188,6 +188,20 @@
         WHERE rn &gt; #{startRow}
     </select>
 
+    <!-- 게시글 총 갯수 가져오기 -->
+    <select id="countDBoard">
+        select count(*)
+        from TBL_BOARD
+        <where>
+            <if test="search != null">
+                <choose>
+                    <when test="searchType == 'title'">BOARD_TITLE LIKE '%' || #{search} || '%'</when>
+                    <when test="searchType == 'content'">BOARD_CONTENT LIKE '%' || #{search} || '%'</when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
 
 
 
