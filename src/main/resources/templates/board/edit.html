@@ -6,6 +6,7 @@
     <title>호근커뮤니티 - 게시글 작성</title>
     <link rel="stylesheet" th:href="@{/css/layout.css}">
     <link rel="stylesheet" th:href="@{/css/write.css}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.css" rel="stylesheet">
 </head>
 <body>
 <!-- 헤더 포함 -->
@@ -53,20 +54,35 @@
 
 <!-- 푸터 포함 -->
 <div th:replace="~{/layout/footer :: footer}"></div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.18/summernote-lite.min.js"></script>
 
 <script>
-    // 로그인 한 친구 ID 확인하는 함수
-    // document.getElementById('myForm').addEventListener('submit', function(event) {
-    //     // 폼 제출을 일시 중지
-    //     event.preventDefault();
-    //
-    //     // providerId 값 확인
-    //     var providerIdValue = document.getElementsByName('providerId')[0].value;
-    //     alert('Provider ID: ' + providerIdValue);
-    //
-    //     // 실제 폼 제출을 계속하려면, 아래 줄의 주석 처리를 해제
-    //     this.submit();
-    // });
+    $(document).ready(function() {
+        // 서버에서 넘어온 boardContent 값을 JavaScript 변수에 저장
+        var content = `[[${board.boardContent}]]`;
+
+        // HTML 엔터티를 실제 HTML로 변환하는 함수
+        function unescapeHtml(html) {
+            var doc = new DOMParser().parseFromString(html, "text/html"); // 해당 문자열을 html 로 변환
+            return doc.documentElement.textContent;
+        }
+
+        // 변환된 내용을 저장
+        var decodedContent = unescapeHtml(content);
+
+        // Summernote 초기화
+        $('#boardContent').summernote({
+            height: 300,
+            tabsize: 2,
+            placeholder: '내용을 입력하세요...'
+        });
+
+        // Summernote에 내용 설정
+        $('#boardContent').summernote('code', decodedContent);
+    });
+
+
 </script>
 
 </body>
