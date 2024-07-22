@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KakaoPay Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label, input, button {
+            margin-bottom: 10px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #ffcd00;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #ffb300;
+        }
+
+        #response {
+            margin-top: 20px;
+            word-wrap: break-word;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>KakaoPay Payment Test</h1>
+    <form id="payment-form">
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" required>
+        <button type="button" class="kakaoPay">Pay with KakaoPay</button>
+    </form>
+    <div id="response"></div>
+</div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://js.bootpay.co.kr/bootpay-5.0.0.min.js" type="application/javascript"></script>
+<script>
+    function pointSave(pay) {
+        $.ajax({
+            url: "/pay/rest/chargingOk",
+            type: "post",
+            data: JSON.stringify(pay),
+            contentType: "application/json; charset=utf-8",
+            success: function(result) {
+                console.log(result)
+            },
+
+            error: function () {
+            }
+        });
+    }
+
+    async function kakaoPay() {
+        const response = await Bootpay.requestPayment({
+            "application_id": "59a4d323396fa607cbe75de4", /*WEB Application ID*/
+            "price": $("#amount").val(), /*결제 요청할 금액*/
+            "order_name": "TEST", /*결제할 상품명*/
+            "order_id": 'order_id_' + new Date().getTime(), /*주문번호*/
+            "pg": "카카오페이", /*결제 요청할 PG Symbol*/
+            "method": "카카오페이", /*결제 요청할 결제수단 symbol*/
+            // "user": { /*구매자 정보*/
+            //     "id": $("#user").val()
+            // },
+            "items": [
+                {
+                    "id": 'id_' + new Date().getTime(), /*상품의 고유 ID*/
+                    "name": "Neos Point", /*상품명*/
+                    "qty": 1, /*상품 구매 개수*/
+                    "price": $("#amount").val() /*상품 하나의 단가*/
+                }
+            ],
+            "extra": {
+                "open_type": "iframe", /*결제창 진행방식*/
+                "seller_name": "NEOS", /*판매자 이름*/
+                "escrow": false /*에스크로 결제인 경우 true로 요청*/
+            }
+        })
+        switch (response.event) {
+            case 'done':
+                // 결제 완료 처리
+                pointSave({
+                    result: response.data.price,
+                });
+                break;
+        }
+    }
+
+    $(".kakaoPay").on("click", function () {
+        kakaoPay();
+    })
+</script>
+</body>
+</html>
