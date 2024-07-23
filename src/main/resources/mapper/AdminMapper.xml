@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.example.board.mapper.AdminMapper">
+
+    <!--  총 유저 수  -->
+    <select id="getUserCountForAdmin">
+        select count(*)
+        from tbl_users
+    </select>
+
+    <!--  관리자페이지에서 볼 유저 목록  -->
+    <select id="getUserListForAdmin">
+        SELECT *
+        FROM (
+                 SELECT ROWNUM AS RN, users.*
+                 FROM (
+                          select * from tbl_users
+                      ) users
+                 WHERE ROWNUM &lt;= #{endRow}
+             )users
+        WHERE rn &gt; #{startRow}
+    </select>
+
+</mapper>

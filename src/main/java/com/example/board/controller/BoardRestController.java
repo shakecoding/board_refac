@@ -25,7 +25,7 @@ public class BoardRestController {
                                                                  @RequestParam(value = "pageSize", defaultValue = "10") int pageSize,
                                                                @RequestParam(value = "search") String search,
                                                                @RequestParam(value = "searchType") String searchType) {
-        //        switch (sort) {
+//        switch (sort) {
 //            case "newest":
 //                sortedBoards = boardService.getBoardList(page, pageSize);
 //                break;
