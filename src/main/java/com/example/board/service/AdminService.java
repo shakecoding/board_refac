@@ -1,12 +1,26 @@
 package com.example.board.service;
 
+import com.example.board.domain.dto.NoticeDTO;
 import com.example.board.domain.dto.UsersDTO;
-import com.example.board.domain.util.PagedResponse;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public interface AdminService {
 
-    PagedResponse<UsersDTO> getUserList(int page, int pageSize);
+    // 유저 관리
+    List<UsersDTO> getUserListAdmin();
 
+    int deleteUser(String providerId);
+
+
+    // 공지 사항 관리
+    List<NoticeDTO> getNoticeList();
+
+    int deleteNotice(Long noticeId);
+
+    NoticeDTO getNoticeById(Long noticeId);
+
+    int editNotice(NoticeDTO noticeDTO);
 }

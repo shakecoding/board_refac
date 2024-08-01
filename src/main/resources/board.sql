@@ -97,6 +97,15 @@ CREATE TABLE TBL_BOARD_FILE
 );
 
 
+CREATE TABLE TBL_Notice
+(
+    notice_id           NUMBER PRIMARY KEY,
+    notice_title        VARCHAR2(1000),
+    notice_content      VARCHAR2(1000),
+    notice_date         date
+);
+
+
 
 SELECT *
 FROM tbl_file;
