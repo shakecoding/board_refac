@@ -1,7 +1,9 @@
 package com.example.board.service;
 
+import com.example.board.domain.dto.BannerDTO;
 import com.example.board.domain.dto.NoticeDTO;
 import com.example.board.domain.dto.UsersDTO;
+import com.example.board.domain.vo.NoticeVO;
 import com.example.board.mapper.AdminMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -44,6 +46,16 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public int editNotice(NoticeDTO noticeDTO) {
-        return adminMapper.editNotice(noticeDTO);
+        return adminMapper.editNotice(NoticeVO.toEntity(noticeDTO));
+    }
+
+    @Override
+    public int saveNotice(NoticeDTO noticeDTO) {
+        return adminMapper.saveNotice(NoticeVO.toEntity(noticeDTO));
+    }
+
+    @Override
+    public List<BannerDTO> getBannerList() {
+        return adminMapper.getBanners();
     }
 }

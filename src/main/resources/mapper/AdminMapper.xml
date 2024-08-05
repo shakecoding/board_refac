@@ -40,4 +40,15 @@
         where NOTICE_ID = #{noticeId}
     </update>
 
+    <insert id="saveNotice">
+        insert into TBL_NOTICE
+        values (seq_notice.nextval, #{noticeTitle}, #{noticeContent}, sysdate)
+    </insert>
+
+
+    <!--  배너 리스트  -->
+    <select id="getBanners">
+        select * from TBL_BANNER
+    </select>
+
 </mapper>

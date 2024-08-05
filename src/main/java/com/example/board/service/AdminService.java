@@ -1,5 +1,6 @@
 package com.example.board.service;
 
+import com.example.board.domain.dto.BannerDTO;
 import com.example.board.domain.dto.NoticeDTO;
 import com.example.board.domain.dto.UsersDTO;
 import org.springframework.stereotype.Service;
@@ -23,4 +24,12 @@ public interface AdminService {
     NoticeDTO getNoticeById(Long noticeId);
 
     int editNotice(NoticeDTO noticeDTO);
+
+    int saveNotice(NoticeDTO noticeDTO);
+
+
+    // 배너 관리
+    List<BannerDTO> getBannerList();
+
+
 }

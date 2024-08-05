@@ -1,5 +1,6 @@
 package com.example.board.controller.admin;
 
+import com.example.board.domain.dto.BannerDTO;
 import com.example.board.domain.dto.NoticeDTO;
 import com.example.board.domain.dto.UsersDTO;
 import com.example.board.service.AdminService;
@@ -40,6 +41,33 @@ public class AdminRestController {
         return ResponseEntity.ok(adminService.getNoticeList());
     }
 
+    @GetMapping("/notices/{noticeId}")
+    public ResponseEntity<NoticeDTO> getNotice(@PathVariable("noticeId") Long noticeId) {
+        return ResponseEntity.ok(adminService.getNoticeById(noticeId));
+    }
+
+    @PostMapping("/notices")
+    public ResponseEntity<String> saveNotice(@RequestBody NoticeDTO noticeDTO) {
+        int result = adminService.saveNotice(noticeDTO);
+
+        if (result == 1){
+            return ResponseEntity.ok("추가완료");
+        }
+
+        return ResponseEntity.ok("추가 중 오류");
+    }
+
+    @PutMapping("/notices")
+    public ResponseEntity<String> editNotice(@RequestBody NoticeDTO noticeDTO) {
+        int result = adminService.editNotice(noticeDTO);
+
+        if (result == 1){
+            return ResponseEntity.ok("수정완료");
+        }
+
+        return ResponseEntity.ok("수정 중 오류");
+    }
+
     @DeleteMapping("/notices/{noticeId}")
     public ResponseEntity<String> deleteNotice(@PathVariable("noticeId") Long noticeId) {
         int result = adminService.deleteNotice(noticeId);
@@ -51,21 +79,11 @@ public class AdminRestController {
         return ResponseEntity.ok("삭제 중 오류");
     }
 
-    @GetMapping("/notices/{noticeId}")
-    public ResponseEntity<NoticeDTO> getNotice(@PathVariable("noticeId") Long noticeId) {
-        return ResponseEntity.ok(adminService.getNoticeById(noticeId));
+
+    // 배너 관리
+    @GetMapping("/banners")
+    public ResponseEntity<List<BannerDTO>> getBannerListAdmin(){
+        return ResponseEntity.ok(adminService.getBannerList());
     }
-
-    @PutMapping("/notices")
-    public ResponseEntity<String> editNotice(@RequestBody NoticeDTO noticeDTO) {
-        int result = adminService.editNotice(noticeDTO);
-
-        if (result == 1){
-            return ResponseEntity.ok("삭제완료");
-        }
-
-        return ResponseEntity.ok("삭제 중 오류");
-    }
-
 
 }

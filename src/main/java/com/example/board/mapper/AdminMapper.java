@@ -1,7 +1,9 @@
 package com.example.board.mapper;
 
+import com.example.board.domain.dto.BannerDTO;
 import com.example.board.domain.dto.NoticeDTO;
 import com.example.board.domain.dto.UsersDTO;
+import com.example.board.domain.vo.NoticeVO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -27,6 +29,11 @@ public interface AdminMapper {
 
     NoticeDTO getNotice(Long noticeId);
 
-    int editNotice(NoticeDTO noticeDTO);
+    int editNotice(NoticeVO vo);
 
+    int saveNotice(NoticeVO vo);
+
+
+    // 배너 관리
+    List<BannerDTO> getBanners();
 }
