@@ -7,6 +7,7 @@ import com.example.board.service.AdminService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -84,6 +85,24 @@ public class AdminRestController {
     @GetMapping("/banners")
     public ResponseEntity<List<BannerDTO>> getBannerListAdmin(){
         return ResponseEntity.ok(adminService.getBannerList());
+    }
+
+    @DeleteMapping("/banners/{bannerId}")
+    public ResponseEntity<String> deleteBanner(@PathVariable("bannerId") Long bannerId) {
+        int result = adminService.deleteBanner(bannerId);
+
+        if (result == 1){
+            return ResponseEntity.ok("삭제완료");
+        }
+
+        return ResponseEntity.ok("삭제 중 오류");
+    }
+
+    @PostMapping("/banners")
+    public ResponseEntity<String> saveBanner(@RequestParam("bannerTitle") String bannerTitle,
+                                             @RequestParam("bannerImage") MultipartFile bannerImage) {
+        String result = adminService.saveBanner(bannerTitle, bannerImage);
+        return ResponseEntity.ok(result);
     }
 
 }

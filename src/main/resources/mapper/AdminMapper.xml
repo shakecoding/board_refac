@@ -51,4 +51,14 @@
         select * from TBL_BANNER
     </select>
 
+    <delete id="deleteBanner">
+        delete from TBL_BANNER
+        where BANNER_ID = #{bannerId}
+    </delete>
+
+    <insert id="saveBanner">
+        insert into TBL_BANNER
+        values (seq_banner.nextval, #{bannerTitle}, #{bannerImg}, sysdate)
+    </insert>
+
 </mapper>

@@ -3,6 +3,7 @@ package com.example.board.mapper;
 import com.example.board.domain.dto.BannerDTO;
 import com.example.board.domain.dto.NoticeDTO;
 import com.example.board.domain.dto.UsersDTO;
+import com.example.board.domain.vo.BannerVO;
 import com.example.board.domain.vo.NoticeVO;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -36,4 +37,8 @@ public interface AdminMapper {
 
     // 배너 관리
     List<BannerDTO> getBanners();
+
+    int deleteBanner(Long bannerId);
+
+    int saveBanner(BannerVO vo);
 }

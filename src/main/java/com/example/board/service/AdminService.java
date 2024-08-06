@@ -4,6 +4,7 @@ import com.example.board.domain.dto.BannerDTO;
 import com.example.board.domain.dto.NoticeDTO;
 import com.example.board.domain.dto.UsersDTO;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -30,6 +31,10 @@ public interface AdminService {
 
     // 배너 관리
     List<BannerDTO> getBannerList();
+
+    int deleteBanner(Long bannerId);
+
+    String saveBanner(String bannerTitle, MultipartFile file);
 
 
 }

@@ -22,7 +22,7 @@ public class WebConfig implements WebMvcConfigurer {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/admin/**")
-                        .allowedOrigins("http://localhost:5173") // Vue.js 애플리케이션의 포트 번호
+                        .allowedOrigins("http://localhost:2080") // Vue.js 애플리케이션의 포트 번호
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS");
             }
         };
